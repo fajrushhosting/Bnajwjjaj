@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JKT48 Link-in-Bio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="https://jkt48.com/favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f0fc;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-image: linear-gradient(to bottom, #ffebf7, #f0d5ff);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Background pattern dengan tema JKT48 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="60" font-size="40" fill="rgba(220, 20, 140, 0.05)">JKT48</text></svg>');
+            background-repeat: repeat;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            z-index: 1;
+        }
+        
+        /* Header dengan tema JKT48 */
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .logo-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #ff66b2;
+            box-shadow: 0 8px 20px rgba(220, 20, 140, 0.3);
+            background: linear-gradient(45deg, #ff66b2, #b3478c);
+        }
+        
+        .logo-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #ff4081;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 3px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .title {
+            font-size: 2.5rem;
+            color: #dc148c;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        /* Kontrol audio */
+        .audio-controls {
+            background-color: white;
+            border-radius: 50px;
+            padding: 12px 25px;
+            box-shadow: 0 5px 15px rgba(220, 20, 140, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .music-icon {
+            color: #dc148c;
+            font-size: 24px;
+        }
+        
+        .audio-info {
+            flex-grow: 1;
+        }
+        
+        .song-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95rem;
+        }
+        
+        .song-artist {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .audio-btn {
+            background-color: #dc148c;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .audio-btn:hover {
+            background-color: #b51075;
+            transform: scale(1.05);
+        }
+        
+        /* Container untuk link */
+        .links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .link-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 18px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 5px solid #dc148c;
+        }
+        
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(220, 20, 140, 0.2);
+            border-left-width: 8px;
+        }
+        
+        .link-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+        
+        .instagram-bg {
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+        }
+        
+        .sociabuzz-bg {
+            background: linear-gradient(45deg, #FF6B35, #FFA500);
+        }
+        
+        .telegram-bg {
+            background: linear-gradient(45deg, #0088cc, #00aced);
+        }
+        
+        .shop-bg {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+        }
+        
+        .link-text {
+            flex-grow: 1;
+        }
+        
+        .link-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .link-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .link-arrow {
+            color: #dc148c;
+            font-size: 20px;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            padding: 20px;
+            width: 100%;
+            border-top: 1px solid rgba(220, 20, 140, 0.2);
+        }
+        
+        .jkt48-text {
+            color: #dc148c;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        /* Efek dekoratif */
+        .decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 102, 178, 0.1);
+            z-index: -1;
+        }
+        
+        .decoration-1 {
+            top: 5%;
+            left: 5%;
+            width: 120px;
+            height: 120px;
+        }
+        
+        .decoration-2 {
+            bottom: 10%;
+            right: 5%;
+            width: 150px;
+            height: 150px;
+            background: rgba(179, 71, 140, 0.1);
+        }
+        
+        /* Responsif untuk mobile */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .logo-container {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .link-card {
+                padding: 15px;
+            }
+            
+            .audio-controls {
+                width: 95%;
+            }
+            
+            .decoration {
+                display: none;
+            }
+        }
+        
+        /* Animasi loading */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.3s; opacity: 0; }
+        .delay-3 { animation-delay: 0.5s; opacity: 0; }
+        .delay-4 { animation-delay: 0.7s; opacity: 0; }
+        .delay-5 { animation-delay: 0.9s; opacity: 0; }
+    </style>
+</head>
+<body>
+    <!-- Elemen dekoratif -->
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+    
+    <div class="container">
+        <!-- Header dengan logo dan judul -->
+        <div class="header fade-in">
+            <div class="logo-container">
+                <div class="logo"></div>
+                <div class="logo-overlay">
+                    <i class="fas fa-heart"></i>
+                </div>
+            </div>
+            <h1 class="title">JKT48 Link-in-Bio</h1>
+            <p class="subtitle">Selamat datang di halaman link personal dengan tema JKT48. Nikmati lagu JKT48 sambil menjelajahi berbagai link berikut!</p>
+        </div>
+        
+        <!-- Kontrol pemutaran audio -->
+        <div class="audio-controls fade-in delay-1">
+            <div class="music-icon">
+                <i class="fas fa-music"></i>
+            </div>
+            <div class="audio-info">
+                <div class="song-title">Heavy Rotation - JKT48</div>
+                <div class="song-artist">Sedang diputar</div>
+            </div>
+            <button class="audio-btn" id="playPauseBtn">
+                <i class="fas fa-pause" id="playPauseIcon"></i>
+            </button>
+        </div>
+        
+        <!-- Container untuk link -->
+        <div class="links-container">
+            <!-- Link Instagram -->
+            <a href="https://www.instagram.com/fajrush33" target="_blank" class="link-card fade-in delay-2">
+                <div class="link-icon instagram-bg">
+                    <i class="fab fa-instagram"></i>
+                </div>
+                <div class="link-text">
+                    <div class="link-title">Instagram Pribadi</div>
+                    <div class="link-desc">@fajrush33 - Follow untuk update harian saya</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+            
+            <!-- Link Sociabuzz -->
+            <a href="https://sociabuzz.com/fajrush/tribe" target="_blank" class="link-card fade-in delay-3">
+                <div class="link-icon sociabuzz-bg">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="link-text">
+                    <div class="link-title">Sociabuzz</div>
+                    <div class="link-desc">Support kreator di Sociabuzz</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+            
+            <!-- Link Jualan Diecast -->
+            <a href="https://www.instagram.com/fajrushdiecast" target="_blank" class="link-card fade-in delay-4">
+                <div class="link-icon shop-bg">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="link-text">
+                    <div class="link-title">Jualan Diecast</div>
+                    <div class="link-desc">Koleksi diecast terbaru di Instagram</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+            
+            <!-- Link Telegram Channel -->
+            <a href="https://t.me/fajrushchannel" target="_blank" class="link-card fade-in delay-5">
+                <div class="link-icon telegram-bg">
+                    <i class="fab fa-telegram"></i>
+                </div>
+                <div class="link-text">
+                    <div class="link-title">Channel Telegram</div>
+                    <div class="link-desc">Update terbaru di Telegram Channel</div>
+                </div>
+                <div class="link-arrow">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </a>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer fade-in">
+            <p>© 2023 Link-in-Bio dengan tema <span class="jkt48-text">JKT48</span>. Lagu akan diputar otomatis saat halaman dimuat.</p>
+            <p>Semua link di atas akan membuka halaman baru.</p>
+        </div>
+    </div>
+    
+    <!-- Audio Player (tersembunyi) -->
+    <audio id="bgMusic" loop>
+        <source src="https://audio.jukehost.co.uk/71v4mILW7kvlKqK5j2hylX43tI7pWxRf" type="audio/mpeg">
+        Browser Anda tidak mendukung pemutaran audio.
+    </audio>
+    
+    <script>
+        // Mengontrol pemutaran audio
+        const audioPlayer = document.getElementById('bgMusic');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playPauseIcon = document.getElementById('playPauseIcon');
+        
+        // Fungsi untuk memulai pemutaran musik
+        function playMusic() {
+            audioPlayer.play().then(() => {
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+            }).catch(error => {
+                console.log("Autoplay dicegah oleh browser:", error);
+                // Tampilkan pesan jika autoplay diblokir
+                playPauseBtn.style.backgroundColor = '#ff4081';
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+            });
+        }
+        
+        // Coba putar musik saat halaman dimuat
+        window.addEventListener('load', function() {
+            // Delay sedikit untuk memastikan halaman sudah terload sepenuhnya
+            setTimeout(playMusic, 500);
+        });
+        
+        // Kontrol tombol play/pause
+        playPauseBtn.addEventListener('click', function() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+                playPauseBtn.style.backgroundColor = '#dc148c';
+            } else {
+                audioPlayer.pause();
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+                playPauseBtn.style.backgroundColor = '#ff4081';
+            }
+        });
+        
+        // Update status tombol ketika audio berakhir (tidak akan terjadi karena loop)
+        audioPlayer.addEventListener('ended', function() {
+            playPauseIcon.classList.remove('fa-pause');
+            playPauseIcon.classList.add('fa-play');
+        });
+        
+        // Menambahkan animasi saat hover pada link
+        document.querySelectorAll('.link-card').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Menambahkan efek ketikan pada judul
+        const title = document.querySelector('.title');
+        const originalText = title.textContent;
+        title.textContent = '';
+        
+        let i = 0;
+        function typeWriter() {
+            if (i < originalText.length) {
+                title.textContent += originalText.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+        
+        // Mulai efek ketikan setelah halaman dimuat
+        setTimeout(typeWriter, 800);
+    </script>
+</body>
+</html>
